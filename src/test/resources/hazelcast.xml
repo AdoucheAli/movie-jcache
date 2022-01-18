@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast xmlns="http://www.hazelcast.com/schema/config"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.hazelcast.com/schema/config
+           http://www.hazelcast.com/schema/config/hazelcast-config-5.0.xsd">
+           
+	<network>
+		<join>
+			<multicast enabled="false">
+			</multicast>
+			<tcp-ip enabled="true">
+				<member>127.0.0.1</member>
+			</tcp-ip>
+		</join>
+	</network>
+
+	<cache name="test">
+		<key-type class-name="java.lang.String" />
+		<value-type class-name="java.lang.String" />
+		<statistics-enabled>true</statistics-enabled>
+		<management-enabled>true</management-enabled>
+		<expiry-policy-factory>
+			<!-- ACCESSED, ETERNAL, MODIFIED, TOUCHED -->
+			<!-- NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS -->
+			<timed-expiry-policy-factory 
+				expiry-policy-type="TOUCHED" 
+				duration-amount="10"
+            	time-unit="SECONDS"/>
+		</expiry-policy-factory>
+	
+		<cache-entry-listeners>
+			<cache-entry-listener 
+				old-value-required="false" 
+				synchronous="true">
+				<cache-entry-listener-factory 
+					class-name="fr.adouche.movie.cache.MovieCacheEntryListenerFactory" />
+			</cache-entry-listener>
+		</cache-entry-listeners>
+	</cache>
+</hazelcast>
