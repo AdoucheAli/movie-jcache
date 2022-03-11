@@ -1,0 +1,11 @@
+### All caches
+GET http://localhost:9097/moviejcache/rest/caches
+
+### Find a cache by name
+GET http://localhost:9097/moviejcache/rest/caches/{{cacheName}}
+
+### clear all caches
+DELETE http://localhost:9097/moviejcache/rest/caches/clear
+
+### clear a specific cache
+DELETE http://localhost:9097/moviejcache/rest/caches/clear/{{cacheName}}

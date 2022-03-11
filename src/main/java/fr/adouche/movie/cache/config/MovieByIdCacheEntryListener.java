@@ -14,10 +14,15 @@ import javax.cache.event.CacheEntryUpdatedListener;
 import javax.enterprise.inject.spi.CDI;
 
 import fr.adouche.movie.cache.enums.CachesName;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class MovieByIdCacheEntryListener implements CacheEntryCreatedListener<Object, Object>,
         CacheEntryUpdatedListener<Object, Object>, CacheEntryExpiredListener<Object, Object>,
         CacheEntryRemovedListener<Object, Object> {
+
+    private static final Logger LOGGER = getLogger(MovieByIdCacheEntryListener.class);
 
     CacheManager cacheManager;
 
@@ -49,13 +54,15 @@ public class MovieByIdCacheEntryListener implements CacheEntryCreatedListener<Ob
     }
 
     private void display(CacheEntryEvent<? extends Object, ? extends Object> event) {
-        System.out.println(
+        LOGGER.info(
                 String.format("[cache %s][listener %s][%s] - %s=%s)",
                         event.getSource().getName(),
                         this,
                         event.getEventType(),
                         event.getKey(),
-                        event.getValue()));
+                        event.getValue()
+                )
+        );
     }
 
     private void clearOtherCache() {
@@ -63,6 +70,6 @@ public class MovieByIdCacheEntryListener implements CacheEntryCreatedListener<Ob
                 .filter(name -> !name.equals(CachesName.MOVIE_BY_ID.getCacheName()))
                 .map(cacheManager::getCache)
                 .filter(Objects::nonNull)
-                .forEach(Cache::clear); //ne pas utiliser removeAll sinon plantage. avec clear on ne notifie pas les listener, avec removeAll oui.
+                .forEach(Cache::clear); //don't use removeAll. With clear, we don't notify listeners, but with removeAll we do.
     }
 }

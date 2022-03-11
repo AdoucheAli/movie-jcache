@@ -26,18 +26,8 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/rest")
 public class ApplicationConfig extends Application {
 
-//    public ApplicationConfig(@Context ServletConfig sevletConfig) {
-//        BeanConfig beanConfig = new BeanConfig();
-//        beanConfig.setVersion("1.0.0");
-//        beanConfig.setTitle("Movie jcache API");
-//        beanConfig.setBasePath("/moviejcache/api");
-//        beanConfig.setResourcePackage("fr.adouche.movie");
-//        beanConfig.setScan(true);
-//    }
-
     @Override
     public Set<Class<?>> getClasses() {
-        return new HashSet<>(Arrays.asList(MoviesRessource.class, CachesRessource.class));
+        return new HashSet<>(Arrays.asList(MoviesResource.class, CachesResource.class));
     }
-
 }

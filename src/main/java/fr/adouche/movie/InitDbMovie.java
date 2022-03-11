@@ -12,7 +12,7 @@ import fr.adouche.movie.service.MovieService;
 public class InitDbMovie {
 
     @Inject
-    private MovieService service; //on pourrait se contenter d'utiliser MovieRepository et du coup pas besoin d'attendre la creation du cachemanager
+    private MovieService service; //We can use MovieRepository instead of waiting cachemanager creation
 
     public void load() {
         service.addMovie(new Movie("Wedding Crashers", "David Dobkin", "Comedy", 7, 2005));

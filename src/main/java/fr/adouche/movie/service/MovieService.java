@@ -22,15 +22,6 @@ import fr.adouche.movie.repository.MovieRepository;
 @CacheDefaults(cacheName = "movies")
 public class MovieService {
 
-// le clear cache se fait maintenant dans MovieByIdCacheEntryListener
-//    @Inject
-//    @NamedCache(MOVIES)
-//    Cache<Object, Object> moviesCache;
-//
-//    @Inject
-//    @NamedCache(COUNT)
-//    Cache<Object, Object> countCache;
-
     @Inject
     MovieRepository repository;
 
@@ -42,19 +33,16 @@ public class MovieService {
     @CachePut(cacheName = "movieById", cacheKeyGenerator = MovieIdCacheKeyGenerator.class)
     public void addMovie(final @CacheValue Movie movie) {
         repository.addMovie(movie);
-        //clearCaches();
     }
 
     @CachePut(cacheName = "movieById", cacheKeyGenerator = MovieIdCacheKeyGenerator.class)
-    public void editMovie(final @CacheKey Movie movie) {
+    public void editMovie(final @CacheValue Movie movie) {
         repository.editMovie(movie);
-        //clearCaches();
     }
 
     @CacheRemove(cacheName = "movieById")
     public void deleteMovie(final @CacheKey Long id) {
         repository.deleteMovie(id);
-        //clearCaches();
     }
 
     @CacheResult
@@ -78,9 +66,4 @@ public class MovieService {
     public Collection<String> getGenres() {
         return repository.getGenres();
     }
-
-//    private void clearCaches() {
-//        moviesCache.removeAll();
-//        countCache.removeAll();
-//    }
 }

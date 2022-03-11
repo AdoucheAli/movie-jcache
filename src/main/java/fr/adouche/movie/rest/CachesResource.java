@@ -22,10 +22,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import fr.adouche.movie.cache.utils.CacheUtils;
@@ -33,7 +30,7 @@ import fr.adouche.movie.cache.utils.CacheUtils;
 @Path("caches")
 @Produces({"application/json"})
 @Stateless
-public class CachesRessource {
+public class CachesResource {
 
     @Inject
     CacheUtils cacheUtils;
@@ -42,29 +39,23 @@ public class CachesRessource {
     @Path("{cacheName}")
     public Response find(@PathParam("cacheName") final String cacheName) {
         JsonObjectBuilder response = jsonCache(cacheName);
-
         return Response.ok(response.build()).build();
-
     }
 
     @GET
     public Response allCaches() {
-        String cachesName = joinningcachesName();
+        String cachesName = joiningCachesName();
         return Response.ok(cachesName).build();
     }
 
-    private String joinningcachesName() {
-        return cacheUtils.cacheNames().stream().collect(Collectors.joining(", ", "{", "}"));
-    }
-
-    @GET
+    @DELETE
     @Path("clear")
     public String clearCache() {
         cacheUtils.clearCaches();
-        return "clear caches " + joinningcachesName() + " : OK";
+        return "clear caches " + joiningCachesName() + " : OK";
     }
 
-    @GET
+    @DELETE
     @Path("clear/{cacheName}")
     public String clearCache(@PathParam("cacheName") final String cacheName) {
         cacheUtils.clearCache(cacheName);
@@ -76,5 +67,9 @@ public class CachesRessource {
         cacheUtils.getCache(cacheName)
                 .ifPresent(cache -> response.add("name", cache.getName()));
         return response;
+    }
+
+    private String joiningCachesName() {
+        return cacheUtils.cacheNames().stream().collect(Collectors.joining(", ", "{", "}"));
     }
 }

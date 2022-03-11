@@ -14,10 +14,15 @@ import javax.ejb.TimerService;
 import javax.inject.Inject;
 
 import fr.adouche.movie.cache.utils.CacheUtils;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Singleton
 @Startup
 public class CacheDisplayerTimer {
+
+    private static final Logger LOGGER = getLogger(CacheDisplayerTimer.class);
 
     @Inject
     CacheUtils cacheUtils;
@@ -49,18 +54,7 @@ public class CacheDisplayerTimer {
     }
 
     private void displayCache(Cache<Object, Object> cache) {
-        System.err.println("------------ cache " + cache.getName() + " -----------------");
-        cache.forEach(entry -> System.err.println(entry.getKey() + "=" + entry.getValue()));
+        LOGGER.info("------------ cache {} -----------------", cache.getName());
+        cache.forEach(entry -> LOGGER.info("{}={}", entry.getKey(), entry.getValue()));
     }
-
-//  @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
-//  public void atSchedule() {
-//
-//      cacheUtils.cacheNames()
-//              .stream()
-//              .map(cacheUtils::getCache)
-//              .map(Optional::get)
-//              .forEach(this::displayCache);
-//
-//  }
 }

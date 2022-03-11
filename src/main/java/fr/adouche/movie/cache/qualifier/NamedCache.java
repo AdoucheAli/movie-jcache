@@ -15,8 +15,8 @@ import fr.adouche.movie.cache.enums.CachesName;
 @Retention(RUNTIME)
 @Documented
 public @interface NamedCache {
-    //avec cette annotation on n'aura pas d'erreur "Unsatisfied dependencies" lors de l'injection d'un cache avec une valeur particuliere.
-    //le conteneur cdi ne tiendra pas compte de la value mais on pourras l'utiliser dans la methode qui produit le bean
+    //Annotation avoid "Unsatisfied dependencies" error when injecting named cache.
+    //argument is not considered for matching on the injection point
     @Nonbinding
-    CachesName value() default CachesName.MOVIES; //argument is not considered for matching on the injection point.
+    CachesName value() default CachesName.MOVIES;
 }

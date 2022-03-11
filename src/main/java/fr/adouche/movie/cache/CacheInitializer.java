@@ -33,14 +33,16 @@ public class CacheInitializer {
 
     public void boot(@Observes @Initialized(ApplicationScoped.class) Object doesntMatter) {
 
-//        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-//        URI uri = contextClassLoader.getResource("hazelcast.xml").toURI();
+        /*
+            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            URI uri = contextClassLoader.getResource("hazelcast.xml").toURI();
 
-        //to avoid error [com.hazelcast.internal.util.XmlUtil] Enabling XXE protection failed
-        //we put a property in file hazelcastXXE.properties and we load it in SystemPropertiesLoader
+            to avoid error [com.hazelcast.internal.util.XmlUtil] Enabling XXE protection failed
+            we put a property in file hazelcastXXE.properties and we load it in SystemPropertiesLoader
 
-        // start the default CacheManager -- it locates the default hazelcast.xml configuration
-        // and identify the existing HazelcastInstance by its name
+             start the default CacheManager -- it locates the default hazelcast.xml configuration
+             and identify the existing HazelcastInstance by its name
+         */
         Hazelcast.newHazelcastInstance();
 
         //this.cachingProvider = Caching.getCachingProvider(HAZELCAST.getFullyQualifiedName(), contextClassLoader);
@@ -49,7 +51,8 @@ public class CacheInitializer {
         this.cachingProvider = Caching.getCachingProvider(HAZELCAST.getFullyQualifiedName());
         this.cacheManager = cachingProvider.getCacheManager();
 
-        cacheManager.getCache("movies"); //sinon son nom n'apparaitra pas dans cachemanager.getCacheNames
+        //cache movies initialized in hazelcast.xml file
+        cacheManager.getCache("movies"); //otherwise, movies don't appear when we call cachemanager.getCacheNames
 
         createNewCaches();
 

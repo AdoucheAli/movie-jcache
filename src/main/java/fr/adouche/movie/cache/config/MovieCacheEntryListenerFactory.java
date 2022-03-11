@@ -3,7 +3,7 @@ package fr.adouche.movie.cache.config;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryListener;
 
-//ne pas supprimé utilisé dans hazelcast.xml
+//used hazelcast.xml
 public class MovieCacheEntryListenerFactory implements Factory<CacheEntryListener<Object, Object>> {
 
     /**

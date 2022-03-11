@@ -48,11 +48,9 @@ public class CacheUtils {
     public void clearCache(String cacheName) {
         getCache(cacheName)
                 .ifPresent(Cache::removeAll);
-
     }
 
     public void clearCaches() {
-        cacheNames().stream()
-                .forEach(this::clearCache);
+        cacheNames().forEach(this::clearCache);
     }
 }

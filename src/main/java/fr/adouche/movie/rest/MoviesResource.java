@@ -16,33 +16,24 @@
  */
 package fr.adouche.movie.rest;
 
+import fr.adouche.movie.entity.Movie;
+import fr.adouche.movie.service.MovieService;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
-
-import fr.adouche.movie.entity.Movie;
-import fr.adouche.movie.service.MovieService;
-
 @Path("movies")
 @Produces({"application/json"})
 @Stateless
-public class MoviesRessource {
+public class MoviesResource {
 
     @Inject
     MovieService service;
@@ -76,14 +67,6 @@ public class MoviesRessource {
         return service.getMovies(first, max, field, searchTerm);
     }
 
-//  @GET
-//  public List<Movie> getMovies(@QueryParam("first") final Integer first, @QueryParam("max") final Integer max,
-//          @QueryParam("field") final String field, @QueryParam("searchTerm") final String searchTerm) {
-//
-//      System.err.println(first + ", " + max + ", " + field + ", " + searchTerm);
-//      return service.getMovies(first, max, field, searchTerm);
-//  }
-
     @GET
     @Path("genres")
     public Collection<String> getGenres() {
@@ -97,9 +80,19 @@ public class MoviesRessource {
         return movie;
     }
 
+    //don't work with wildfly
+/*    @PATCH
+    @Consumes("application/json")
+    public Movie patchMovie(final Movie movie) {
+        System.err.println(movie);
+        service.editMovie(movie);
+        return movie;
+    }*/
+
     @PUT
     @Consumes("application/json")
     public Movie editMovie(final Movie movie) {
+        System.err.println(movie);
         service.editMovie(movie);
         return movie;
     }

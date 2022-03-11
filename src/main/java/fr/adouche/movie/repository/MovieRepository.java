@@ -19,6 +19,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 
 import fr.adouche.movie.entity.Movie;
+import org.apache.commons.lang3.StringUtils;
 
 @Stateless
 public class MovieRepository {
@@ -38,7 +39,7 @@ public class MovieRepository {
         entityManager.merge(movie);
     }
 
-    public void deleteMovie(final @CacheKey Long id) {
+    public void deleteMovie(final Long id) {
         final Movie movie = entityManager.find(Movie.class, id);
         entityManager.remove(movie);
     }
@@ -53,15 +54,8 @@ public class MovieRepository {
         final CriteriaQuery<Movie> cq = qb.createQuery(Movie.class);
         final Root<Movie> root = cq.from(Movie.class);
         final EntityType<Movie> type = entityManager.getMetamodel().entity(Movie.class);
-        if (field != null && searchTerm != null && !"".equals(field.trim()) && !"".equals(searchTerm.trim())) {
-            final Path<String> path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
 
-            final Predicate condition = ("rating".equals(field) || "productionYear".equals(field))
-                    ? qb.equal(path, Integer.parseInt(searchTerm.trim()))
-                    : qb.like(path, "%" + searchTerm.trim() + "%");
-
-            cq.where(condition);
-        }
+        addConditionToCriteriaQuery(field, searchTerm, qb, cq, root, type);
 
         cq.orderBy(qb.desc(root.get("productionYear")), qb.asc(root.get("title")));
 
@@ -76,6 +70,8 @@ public class MovieRepository {
         return q.getResultList();
     }
 
+
+
     public int count(final String field, final String searchTerm) {
         final CriteriaBuilder qb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> cq = qb.createQuery(Long.class);
@@ -83,15 +79,8 @@ public class MovieRepository {
         final EntityType<Movie> type = entityManager.getMetamodel().entity(Movie.class);
 
         cq.select(qb.count(root));
-        if (field != null && searchTerm != null && !"".equals(field.trim()) && !"".equals(searchTerm.trim())) {
-            final Path<String> path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
+        addConditionToCriteriaQuery(field, searchTerm, qb, cq, root, type);
 
-            final Predicate condition = ("rating".equals(field) || "productionYear".equals(field))
-                    ? qb.equal(path, Integer.parseInt(searchTerm.trim()))
-                    : qb.like(path, "%" + searchTerm.trim() + "%");
-
-            cq.where(condition);
-        }
         return entityManager.createQuery(cq).getSingleResult().intValue();
     }
 
@@ -110,5 +99,16 @@ public class MovieRepository {
         }
 
         return result;
+    }
+
+    private void addConditionToCriteriaQuery(String field, String searchTerm, CriteriaBuilder qb, CriteriaQuery<?> cq, Root<Movie> root, EntityType<Movie> type) {
+        if (StringUtils.isNotBlank(field) && StringUtils.isNotBlank(searchTerm)) {
+            final Path<String> path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
+
+            final Predicate condition = ("rating".equals(field) || "productionYear".equals(field))
+                    ? qb.equal(path, Integer.parseInt(searchTerm.trim()))
+                    : qb.like(path, "%" + searchTerm.trim() + "%");
+            cq.where(condition);
+        }
     }
 }

@@ -13,7 +13,7 @@ import fr.adouche.movie.entity.Movie;
 
 public class MovieIdCacheKeyGenerator implements CacheKeyGenerator {
 
-    //lors de la sauvegarde d'un movie on veux utiliser l'id comme key pour le cache
+    //When we save a movie we want to use his id as key
     @Override
     public GeneratedCacheKey generateCacheKey(CacheKeyInvocationContext<? extends Annotation> cacheKeyInvocationContext) {
         CacheInvocationParameter[] keyParameters = cacheKeyInvocationContext.getAllParameters();
@@ -23,7 +23,6 @@ public class MovieIdCacheKeyGenerator implements CacheKeyGenerator {
 
                 return new DefaultGeneratedCacheKey(new Object[] {movie.getId()});
                 //return new LongCacheKey(movie.getId());
-
             }
         }
         throw new IllegalArgumentException("No movie argument found in method signature");
